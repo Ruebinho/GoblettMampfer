@@ -1,10 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class InputHandler : MonoBehaviour {
 
     PlayCube activatedCube;
+    bool cubeActivated = false;
+
+    FeldBehaviour selectedFeld;
 
 	// Use this for initialization
 	void Start () {
@@ -13,12 +17,56 @@ public class InputHandler : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetMouseButtonDown(0))
+
+        if (!cubeActivated)
+        {
+            MausklickCubeSelection();
+        } else
+        {
+            MausclickCubePlacement();
+        }
+
+    }
+
+    private void MausclickCubePlacement()
+    {
+        if (Input.GetMouseButtonDown(0) && cubeActivated)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitRaycast = new RaycastHit();
 
-            
+
+
+            if (Physics.Raycast(ray, out hitRaycast, Camera.main.farClipPlane))
+            {
+                selectedFeld = hitRaycast.transform.GetComponent<FeldBehaviour>();
+                //Debug.Log(selectedFeld.transform.position);
+                if (selectedFeld != null)
+                {
+                    PlaceCubeOnField(activatedCube);
+                    DeactivateCube();
+                }
+            }
+        }
+    }
+
+    private void PlaceCubeOnField(PlayCube activatedCube)
+    {
+        Debug.Log(activatedCube);
+        Debug.Log(activatedCube.transform.position);
+        Debug.Log(selectedFeld.transform.position);
+        activatedCube.transform.position = selectedFeld.transform.position;
+        selectedFeld.TakeCubeIntoFieldArray(activatedCube);
+    }
+
+    private void MausklickCubeSelection()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitRaycast = new RaycastHit();
+
+
 
             if (Physics.Raycast(ray, out hitRaycast, Camera.main.farClipPlane))
             {
@@ -31,7 +79,7 @@ public class InputHandler : MonoBehaviour {
 
             }
         }
-	}
+    }
 
     private void CubeSelection(PlayCube playCube)
     {   // When playcube isn't activated yet
@@ -39,15 +87,27 @@ public class InputHandler : MonoBehaviour {
         {   // Check if there is any activated cube
             if (activatedCube != null)
             {   // If so deactivate active cube
-                activatedCube.DeactivateCube();
+                DeactivateCube();
             }
             // Set selected cube to active cube and activate
-            activatedCube = playCube;
-            activatedCube.ActivateCube();
+            ActivateCube(playCube);
         }
         else
         {   // if selected cube is activated then deactivate
-            activatedCube.DeactivateCube();
+            DeactivateCube();
         }
+    }
+
+    private void ActivateCube(PlayCube playCube)
+    {
+        activatedCube = playCube;
+        activatedCube.ActivateCube();
+        cubeActivated = true;
+    }
+
+    private void DeactivateCube()
+    {
+        activatedCube.DeactivateCube();
+        cubeActivated = false;
     }
 }
