@@ -52,11 +52,13 @@ public class InputHandler : MonoBehaviour {
 
     private void PlaceCubeOnField(PlayCube activatedCube)
     {
-        Debug.Log(activatedCube);
-        Debug.Log(activatedCube.transform.position);
-        Debug.Log(selectedFeld.transform.position);
+        //Debug.Log(activatedCube);
+        //Debug.Log(activatedCube.transform.position);
+        //Debug.Log(selectedFeld.transform.position);
+        if (selectedFeld.TakeCubeIntoFieldArray(activatedCube))
+        {
         activatedCube.transform.position = selectedFeld.transform.position;
-        selectedFeld.TakeCubeIntoFieldArray(activatedCube);
+        }
     }
 
     private void MausklickCubeSelection()

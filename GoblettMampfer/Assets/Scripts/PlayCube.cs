@@ -10,10 +10,18 @@ public class PlayCube : MonoBehaviour {
     private Material cubeMaterial = null;
     private Color cubeColorStart;
     private Color cubeColorWhileActivated = Color.red;
+    public GameObject CubePlacedOnField;
 
     private void Awake()
     {
         cubeMaterial = GetComponent<MeshRenderer>().material;
+        if (tag.Equals("Player1"))
+        {
+            cubeMaterial.color = Color.yellow; 
+        } else if (tag.Equals("Player2"))
+        {
+            cubeMaterial.color = Color.blue;
+        }
         cubeColorStart = GetComponent<MeshRenderer>().material.color;
     }
 
@@ -42,5 +50,10 @@ public class PlayCube : MonoBehaviour {
     {
         cubeMaterial.color = cubeColorStart;
         isActivated = false;
+    }
+
+    public void setPlacedField(GameObject feld)
+    {
+        CubePlacedOnField = feld;
     }
 }
