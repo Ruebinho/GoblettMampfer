@@ -9,8 +9,8 @@ public class FeldBehaviour : MonoBehaviour
 
     private Material feldMaterial = null;
     private Color feldMaterialColorStart;
-    private List<PlayCube> playcubesOnField;
-    private int Listlength = 0;
+    public List<PlayCube> playcubesOnField;
+    public int Listlength = 0;
 
     private PlayCube lastCube;
 
@@ -123,7 +123,11 @@ public class FeldBehaviour : MonoBehaviour
 
     public void LastCubeRemoved(PlayCube playcube)
     {
-        GameObject oldField = GameObject.
-        playcubesOnField.Remove(playcube);
+        if (playcube.CubePlacedOnField != null)
+        {
+            GameObject oldField = playcube.CubePlacedOnField;
+            FeldBehaviour oldfeldscript = oldField.GetComponent<FeldBehaviour>();
+            oldfeldscript.playcubesOnField.Remove(playcube);
+        }
     }
 }
