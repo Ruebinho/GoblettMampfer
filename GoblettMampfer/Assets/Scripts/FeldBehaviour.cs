@@ -123,7 +123,7 @@ public class FeldBehaviour : MonoBehaviour
 
     public void LastCubeRemoved(PlayCube playcube)
     {
-        GameObject oldField = GameObject.
+        //GameObject oldField = GameObject.
         playcubesOnField.Remove(playcube);
     }
 }
