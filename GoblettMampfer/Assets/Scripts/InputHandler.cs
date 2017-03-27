@@ -3,25 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputHandler : MonoBehaviour {
+public class InputHandler : MonoBehaviour
+{
 
     PlayCube activatedCube;
     bool cubeActivated = false;
 
     FeldBehaviour selectedFeld;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
 
         if (!cubeActivated)
         {
             MausklickCubeSelection();
-        } else
+        }
+        else
         {
             MausclickCubePlacement();
         }
@@ -39,6 +43,7 @@ public class InputHandler : MonoBehaviour {
 
             if (Physics.Raycast(ray, out hitRaycast, Camera.main.farClipPlane))
             {
+
                 selectedFeld = hitRaycast.transform.GetComponent<FeldBehaviour>();
                 //Debug.Log(selectedFeld.transform.position);
                 if (selectedFeld != null)
@@ -46,6 +51,11 @@ public class InputHandler : MonoBehaviour {
                     PlaceCubeOnField(activatedCube);
                     DeactivateCube();
                 }
+                else
+                {
+                    MausklickCubeSelection();
+                }
+
             }
         }
     }
@@ -57,7 +67,7 @@ public class InputHandler : MonoBehaviour {
         //Debug.Log(selectedFeld.transform.position);
         if (selectedFeld.TakeCubeIntoFieldArray(activatedCube))
         {
-        activatedCube.transform.position = selectedFeld.transform.position;
+            activatedCube.transform.position = selectedFeld.transform.position;
         }
     }
 
