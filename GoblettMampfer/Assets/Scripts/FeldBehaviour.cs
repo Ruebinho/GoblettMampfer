@@ -13,6 +13,7 @@ public class FeldBehaviour : MonoBehaviour
     public int Listlength = 0;
 
     private PlayCube lastCube;
+    private GameTurnHandler gameTurnHandler;
 
     private void Awake()
     {
@@ -24,7 +25,7 @@ public class FeldBehaviour : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        gameTurnHandler = GameObject.Find("GameManager").GetComponent<GameTurnHandler>();
     }
 
     // Update is called once per frame
@@ -35,12 +36,18 @@ public class FeldBehaviour : MonoBehaviour
 
     private void OnMouseOver()
     {
+        if (!gameTurnHandler.gameIsWon)
+        {
         ChangeFieldColor(Color.white);
+        }
     }
 
     private void OnMouseExit()
     {
-        ChangeFieldColor(feldMaterialColorStart);
+        if (!gameTurnHandler.gameIsWon)
+        {
+            ChangeFieldColor(feldMaterialColorStart);
+        }
     }
 
     public bool TakeCubeIntoFieldArray(PlayCube playcube)
@@ -56,11 +63,11 @@ public class FeldBehaviour : MonoBehaviour
                     //remove cube from old field list
                     LastCubeRemoved(playcube);
 
-
                     //put cube on new field list
                     Listlength++;
                     playcubesOnField.Add(playcube);
                     playcube.setPlacedField(this.gameObject);
+                    Debug.Log("Placemnt worked");
                     return true;
                 }
                 else
@@ -82,57 +89,70 @@ public class FeldBehaviour : MonoBehaviour
 
     private bool CompareToPlacedCubeSizeBigger(PlayCube playcube)
     {
-        Listlength = playcubesOnField.Count();
-
         Debug.Log(Listlength);
 
         if (Listlength >= 1)
         {
             lastCube = playcubesOnField.ElementAt(Listlength - 1).GetComponent<PlayCube>();
-        }
-
-        if (lastCube != null)
-        {
-            if (lastCube.thisCubesSize < playcube.thisCubesSize)
+            if (lastCube != null)
             {
-                return true;
+                if (lastCube.thisCubesSize < playcube.thisCubesSize)
+                {
+                    return true;
+                }
+                else
+                {
+                    FlashFieldForWrongMove();
+                    return false;
+                }
             }
             else
             {
-                FlashFieldForWrongMove();
-                return false;
+                return true;
             }
+
         }
         else
         {
             return true;
         }
-
     }
 
-    private void ChangeFieldColor(Color color)
+    public void ChangeFieldColor(Color color)
     {
         feldMaterial.color = color;
+    }
+
+    public void ChangeFieldColorToStartColor()
+    {
+        feldMaterial.color = feldMaterialColorStart;
     }
 
     private void FlashFieldForWrongMove()
     {
         ChangeFieldColor(Color.red);
-        Invoke("ChangeFieldColor(feldMaterialColorStart)", 0.5f);
+        Invoke("ChangeFieldColorToStartColor", 1f);
     }
 
     public void LastCubeRemoved(PlayCube playcube)
     {
-<<<<<<< HEAD
-        //GameObject oldField = GameObject.
-        playcubesOnField.Remove(playcube);
-=======
         if (playcube.CubePlacedOnField != null)
         {
             GameObject oldField = playcube.CubePlacedOnField;
             FeldBehaviour oldfeldscript = oldField.GetComponent<FeldBehaviour>();
             oldfeldscript.playcubesOnField.Remove(playcube);
+            oldfeldscript.Listlength--;
         }
->>>>>>> 420e9b4692cf3597f1794cd1f1f387f2e0ccfb5a
+        else
+        {
+            playcubesOnField.Remove(playcube);
+        }
+    }
+
+    public void ResetField()
+    {
+        ChangeFieldColorToStartColor();
+        playcubesOnField = new List<PlayCube>();
+        Listlength = 0;
     }
 }

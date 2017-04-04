@@ -9,12 +9,14 @@ public class InputHandler : MonoBehaviour
     PlayCube activatedCube;
     bool cubeActivated = false;
 
-    FeldBehaviour selectedFeld;
+    private FeldBehaviour selectedFeld;
+
+    private GameTurnHandler gameTurnHandler;
 
     // Use this for initialization
     void Start()
     {
-
+        gameTurnHandler = GameObject.Find("GameManager").GetComponent<GameTurnHandler>();
     }
 
     // Update is called once per frame
@@ -50,6 +52,7 @@ public class InputHandler : MonoBehaviour
                 {
                     PlaceCubeOnField(activatedCube);
                     DeactivateCube();
+                    gameTurnHandler.NextTurn();
                 }
                 else
                 {
@@ -83,8 +86,8 @@ public class InputHandler : MonoBehaviour
             if (Physics.Raycast(ray, out hitRaycast, Camera.main.farClipPlane))
             {
                 PlayCube playCube = hitRaycast.transform.GetComponent<PlayCube>();
-
-                if (playCube != null)
+                Debug.Log(playCube);
+                if (playCube != null && playCube.isClickable)
                 {
                     CubeSelection(playCube);
                 }

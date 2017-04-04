@@ -2,23 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayCube : MonoBehaviour {
+public class PlayCube : MonoBehaviour
+{
 
     public int thisCubesSize = 0;
+    public Vector3 initialCubePosition;
+
     public bool isActivated = false;
+    public bool isClickable = false;
+    public GameObject CubePlacedOnField;
 
     private Material cubeMaterial = null;
     private Color cubeColorStart;
     private Color cubeColorWhileActivated = Color.red;
-    public GameObject CubePlacedOnField;
+    private Color cubeColorWhenWon = Color.green;
 
     private void Awake()
     {
         cubeMaterial = GetComponent<MeshRenderer>().material;
         if (tag.Equals("Player1"))
         {
-            cubeMaterial.color = Color.yellow; 
-        } else if (tag.Equals("Player2"))
+            cubeMaterial.color = Color.yellow;
+        }
+        else if (tag.Equals("Player2"))
         {
             cubeMaterial.color = Color.blue;
         }
@@ -26,18 +32,15 @@ public class PlayCube : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    public void CycleColor()
+    void Start()
     {
-        Debug.Log("CycleColor() : " + name);
+        initialCubePosition = this.transform.position;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
     }
 
     public void ActivateCube()
@@ -55,5 +58,15 @@ public class PlayCube : MonoBehaviour {
     public void setPlacedField(GameObject feld)
     {
         CubePlacedOnField = feld;
+    }
+
+    public void ChangeCubeColorWhenWon()
+    {
+        cubeMaterial.color = cubeColorWhenWon;
+    }
+
+    public void ReturnCubeToInitialPosition()
+    {
+        this.transform.position = initialCubePosition;
     }
 }
