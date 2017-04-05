@@ -151,8 +151,8 @@ public class FeldBehaviour : MonoBehaviour
     {
         turnIsWrong = true;
         ChangeFieldColor(Color.red);
-        Invoke("ChangeFieldColorToStartColor", 1f);
-        Invoke("SetTurnIsWrongToStart", 1f);
+        Invoke("ChangeFieldColorToStartColor", 0.35f);
+        Invoke("SetTurnIsWrongToStart", 0.35f);
     }
 
     public void LastCubeRemoved(PlayCube playcube)
