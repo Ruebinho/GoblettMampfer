@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayCube : MonoBehaviour
 {
-
+    #region cubeVariables
     public int thisCubesSize = 0;
     public Vector3 initialCubePosition;
 
@@ -16,6 +16,8 @@ public class PlayCube : MonoBehaviour
     private Color cubeColorStart;
     private Color cubeColorWhileActivated = Color.red;
     private Color cubeColorWhenWon = Color.green;
+
+    #endregion
 
     private void Awake()
     {
@@ -55,7 +57,7 @@ public class PlayCube : MonoBehaviour
         isActivated = false;
     }
 
-    public void setPlacedField(GameObject feld)
+    public void SetPlacedField(GameObject feld)
     {
         CubePlacedOnField = feld;
     }
@@ -68,5 +70,13 @@ public class PlayCube : MonoBehaviour
     public void ReturnCubeToInitialPosition()
     {
         this.transform.position = initialCubePosition;
+    }
+
+    public void ResetCube()
+    {
+        ReturnCubeToInitialPosition();
+        DeactivateCube();
+        CubePlacedOnField = null;
+
     }
 }

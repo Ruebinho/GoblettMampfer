@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
+    #region inputHandlerVariables
 
     PlayCube activatedCube;
     bool cubeActivated = false;
@@ -12,6 +13,8 @@ public class InputHandler : MonoBehaviour
     private FeldBehaviour selectedFeld;
 
     private GameTurnHandler gameTurnHandler;
+
+    #endregion
 
     // Use this for initialization
     void Start()
@@ -50,9 +53,15 @@ public class InputHandler : MonoBehaviour
                 //Debug.Log(selectedFeld.transform.position);
                 if (selectedFeld != null)
                 {
-                    PlaceCubeOnField(activatedCube);
-                    DeactivateCube();
-                    gameTurnHandler.NextTurn();
+                    if (PlaceCubeOnField(activatedCube))
+                    {
+                        DeactivateCube();
+                        gameTurnHandler.NextTurn();
+                    } else
+                    {
+                        
+                    }
+
                 }
                 else
                 {
@@ -63,7 +72,7 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-    private void PlaceCubeOnField(PlayCube activatedCube)
+    private bool PlaceCubeOnField(PlayCube activatedCube)
     {
         //Debug.Log(activatedCube);
         //Debug.Log(activatedCube.transform.position);
@@ -71,6 +80,11 @@ public class InputHandler : MonoBehaviour
         if (selectedFeld.TakeCubeIntoFieldArray(activatedCube))
         {
             activatedCube.transform.position = selectedFeld.transform.position;
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -86,7 +100,7 @@ public class InputHandler : MonoBehaviour
             if (Physics.Raycast(ray, out hitRaycast, Camera.main.farClipPlane))
             {
                 PlayCube playCube = hitRaycast.transform.GetComponent<PlayCube>();
-                Debug.Log(playCube);
+                //Debug.Log(playCube);
                 if (playCube != null && playCube.isClickable)
                 {
                     CubeSelection(playCube);

@@ -315,14 +315,14 @@ public class GameTurnHandler : MonoBehaviour
     public void RestartGame()
     {
         winCanvas.enabled = false;
+        gameIsWon = false;
 
         thisPlayersTurn = 1;
         totalTurns = 1;
 
         foreach (PlayCube playcube in FindObjectsOfType<PlayCube>())
         {
-            playcube.ReturnCubeToInitialPosition();
-            playcube.DeactivateCube();
+            playcube.ResetCube();
         }
 
         foreach (FeldBehaviour spielfeld in FindObjectsOfType<FeldBehaviour>())

@@ -6,6 +6,7 @@ using System;
 
 public class FeldBehaviour : MonoBehaviour
 {
+    #region fieldvariables
 
     private Material feldMaterial = null;
     private Color feldMaterialColorStart;
@@ -14,6 +15,9 @@ public class FeldBehaviour : MonoBehaviour
 
     private PlayCube lastCube;
     private GameTurnHandler gameTurnHandler;
+    private bool turnIsWrong;
+
+    #endregion
 
     private void Awake()
     {
@@ -36,9 +40,9 @@ public class FeldBehaviour : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (!gameTurnHandler.gameIsWon)
+        if (!gameTurnHandler.gameIsWon && !turnIsWrong)
         {
-        ChangeFieldColor(Color.white);
+            ChangeFieldColor(Color.white);
         }
     }
 
@@ -52,34 +56,49 @@ public class FeldBehaviour : MonoBehaviour
 
     public bool TakeCubeIntoFieldArray(PlayCube playcube)
     {
+        Debug.Log(playcubesOnField.Count);
         if (playcubesOnField.Count <= 2)
         {
-            Debug.Log(playcubesOnField);
-
-            if (playcube.CubePlacedOnField.GetInstanceID() != this.gameObject.GetInstanceID())
+            //Debug.Log(playcubesOnField);
+            if (CompareToPlacedCubeSizeBigger(playcube))
             {
-                if (CompareToPlacedCubeSizeBigger(playcube))
+                if (playcube.CubePlacedOnField != null)
                 {
-                    //remove cube from old field list
-                    LastCubeRemoved(playcube);
+                    if (playcube.CubePlacedOnField.GetInstanceID() != this.gameObject.GetInstanceID())
+                    {
+                        //remove cube from old field list
+                        LastCubeRemoved(playcube);
 
-                    //put cube on new field list
-                    Listlength++;
-                    playcubesOnField.Add(playcube);
-                    playcube.setPlacedField(this.gameObject);
-                    Debug.Log("Placemnt worked");
-                    return true;
+                        //put cube on new field list
+                        Listlength++;
+                        playcubesOnField.Add(playcube);
+                        playcube.SetPlacedField(this.gameObject);
+                        Debug.Log("Cube is Bigger");
+                        return true;
+                    }
+                    else
+                    {
+                        //if playcube is set to the same field it needs no adjustment in parameters
+                        playcubesOnField.Add(playcube);
+                        return true;
+                    }
+
                 }
                 else
-                {
-                    return false;
+                {   
+                    // If cube comes from inital position add it to the new field
+                    Listlength++;
+                    playcubesOnField.Add(playcube);
+                    playcube.SetPlacedField(this.gameObject);
+                    return true;
                 }
+
             }
             else
             {
-                playcubesOnField.Add(playcube);
-                return true;
+                return false;
             }
+
         }
         else
         {
@@ -130,8 +149,10 @@ public class FeldBehaviour : MonoBehaviour
 
     private void FlashFieldForWrongMove()
     {
+        turnIsWrong = true;
         ChangeFieldColor(Color.red);
         Invoke("ChangeFieldColorToStartColor", 1f);
+        Invoke("SetTurnIsWrongToStart", 1f);
     }
 
     public void LastCubeRemoved(PlayCube playcube)
@@ -154,5 +175,10 @@ public class FeldBehaviour : MonoBehaviour
         ChangeFieldColorToStartColor();
         playcubesOnField = new List<PlayCube>();
         Listlength = 0;
+    }
+
+    private void SetTurnIsWrongToStart()
+    {
+        turnIsWrong = false;
     }
 }
