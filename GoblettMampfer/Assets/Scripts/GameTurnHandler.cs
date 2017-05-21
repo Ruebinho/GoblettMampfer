@@ -46,19 +46,16 @@ public class GameTurnHandler : MonoBehaviour
 
     private FeldBehaviour[] winningFields = new FeldBehaviour[3];
 
+    private UIScript uiscript;
+
     #endregion
 
     // Use this for initialization
     void Start()
     {
         winCanvas = GameObject.Find("WinCanvas").GetComponent<Canvas>();
+        uiscript = GameObject.Find("Canvas").GetComponent<UIScript>();
         RestartGame();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void MakeCubesForPlayersTurnClickable()
@@ -95,6 +92,7 @@ public class GameTurnHandler : MonoBehaviour
                 totalTurns++;
                 thisPlayersTurn++;
                 MakeCubesForPlayersTurnClickable();
+                uiscript.ChangeTextColorForPlayerTurn(thisPlayersTurn);
             }
             else
             {
@@ -102,6 +100,7 @@ public class GameTurnHandler : MonoBehaviour
                 totalTurns++;
                 thisPlayersTurn = 1;
                 MakeCubesForPlayersTurnClickable();
+                uiscript.ChangeTextColorForPlayerTurn(thisPlayersTurn);
             }
         }
         else
@@ -131,48 +130,48 @@ public class GameTurnHandler : MonoBehaviour
 
     public bool CheckWinningPatterns()
     {
-        getCurrentFields();
-        getPlayerTagsFromFields();
+        GetCurrentFields();
+        GetPlayerTagsFromFields();
 
         //If a certain pattern is filled with cubes from one player only he wins
         if (tagOL == tagOM && tagOL == tagOR)
         {
-            setWinningPattern(feldObenLinks, feldObenMitte, feldObenRechts);
+            SetWinningPattern(feldObenLinks, feldObenMitte, feldObenRechts);
             return true;
         }
         else if (tagML == tagMM && tagML == tagMR)
         {
-            setWinningPattern(feldMitteLinks, feldMitteMitte, feldMitteRechts);
+            SetWinningPattern(feldMitteLinks, feldMitteMitte, feldMitteRechts);
             return true;
         }
         else if (tagUL == tagUM && tagUL == tagUR)
         {
-            setWinningPattern(feldUntenLinks, feldUntenMitte, feldUntenRechts);
+            SetWinningPattern(feldUntenLinks, feldUntenMitte, feldUntenRechts);
             return true;
         }
         else if (tagOL == tagML && tagOL == tagUL)
         {
-            setWinningPattern(feldObenLinks, feldMitteLinks, feldUntenLinks);
+            SetWinningPattern(feldObenLinks, feldMitteLinks, feldUntenLinks);
             return true;
         }
         else if (tagOM == tagMM && tagOM == tagUM)
         {
-            setWinningPattern(feldObenMitte, feldMitteMitte, feldUntenMitte);
+            SetWinningPattern(feldObenMitte, feldMitteMitte, feldUntenMitte);
             return true;
         }
         else if (tagOR == tagMR && tagOR == tagUR)
         {
-            setWinningPattern(feldObenRechts, feldMitteRechts, feldUntenRechts);
+            SetWinningPattern(feldObenRechts, feldMitteRechts, feldUntenRechts);
             return true;
         }
         else if (tagOL == tagMM && tagOL == tagUR)
         {
-            setWinningPattern(feldObenLinks, feldMitteMitte, feldUntenRechts);
+            SetWinningPattern(feldObenLinks, feldMitteMitte, feldUntenRechts);
             return true;
         }
         else if (tagOR == tagMM && tagOR == tagUL)
         {
-            setWinningPattern(feldObenRechts, feldMitteMitte, feldUntenLinks);
+            SetWinningPattern(feldObenRechts, feldMitteMitte, feldUntenLinks);
             return true;
         }
 
@@ -195,7 +194,7 @@ public class GameTurnHandler : MonoBehaviour
 
     }
 
-    public void getCurrentFields()
+    public void GetCurrentFields()
     {
         feldObenLinks = GameObject.Find("Feld_ObenLinks").GetComponent<FeldBehaviour>();
         feldObenMitte = GameObject.Find("Feld_ObenMitte").GetComponent<FeldBehaviour>();
@@ -208,7 +207,7 @@ public class GameTurnHandler : MonoBehaviour
         feldUntenRechts = GameObject.Find("Feld_UntenRechts").GetComponent<FeldBehaviour>();
     }
 
-    public void getPlayerTagsFromFields()
+    public void GetPlayerTagsFromFields()
     {
         if (feldObenLinks.GetComponent<FeldBehaviour>().Listlength > 0)
         {
@@ -292,7 +291,7 @@ public class GameTurnHandler : MonoBehaviour
         }
     }
 
-    public void setWinningPattern(FeldBehaviour field1, FeldBehaviour field2, FeldBehaviour field3)
+    public void SetWinningPattern(FeldBehaviour field1, FeldBehaviour field2, FeldBehaviour field3)
     {
         winningFields[0] = field1;
         winningFields[1] = field2;
@@ -331,5 +330,8 @@ public class GameTurnHandler : MonoBehaviour
         }
 
         MakeCubesForPlayersTurnClickable();
+
+        uiscript.ChangeTextColorForPlayerTurn(thisPlayersTurn);
+
     }
 }
